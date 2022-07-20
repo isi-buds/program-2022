@@ -92,7 +92,7 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | Prediction continued<br /> King County 2001 data <br /> Pred Crit script <br /> Prediciton assessment birthweight script | [`r fa(name = "desktop")`](week2-material/day08/day08-lecture4-part2-prediction.pdf)<br />[`r fa(name = "file")`](week2-material/day08/KingCounty2001_data.txt)<br / > [`r fa(name = "file")`](week2-material/day08/PredCrit.R)<br />[`r fa(name = "file")`](week2-material/day08/PredictionAssessment_Birthweight.R)|
 | DBH 4011 (1:30-3:25pm) | Graduate School Panel | |
 
 ## Day 9 - July 21

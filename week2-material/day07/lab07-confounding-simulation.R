@@ -122,7 +122,7 @@ library(MASS)           ## Load the MASS library to generate bivariate normal da
 n <- 100                ## Sample size of 100
 X <- mvrnorm(n=100,     ## Simulate covariates with correlation .6
              mu=c(0, 0),
-             Sigma=matrix(c(1, .6, 6, 1), ncol=2))    
+             Sigma=matrix(c(1, .6, .6, 1), ncol=2))    
 x1 <- X[,1]
 x2 <- X[,2]
 beta0 <- 2              ## True intercept in the model
@@ -161,7 +161,7 @@ rslt.adj <- matrix(NA,1000,3) ## Create a matrix to store the estimates from eac
 n <- 100                ## Sample size of 100
 X <- mvrnorm(n=100,     ## Simulate covariates with correlation .6
              mu=c(0, 0),
-             Sigma=matrix(c(1, .6, 6, 1), ncol=2))    
+             Sigma=matrix(c(1, .6, .6, 1), ncol=2))    
 x1 <- X[,1]
 x2 <- X[,2]
 beta0 <- 2                        ## True intercept in the model
