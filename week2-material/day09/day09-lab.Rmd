@@ -21,7 +21,7 @@ library(tidyverse)
 ```
 
 ```{r load data}
-## you can downlaod the most up-to-date data
+## you can download the most up-to-date data
 ## and take a look at the data dictionary here: 
 ## https://data.ca.gov/dataset/covid-19-hospital-data1
 
@@ -47,3 +47,5 @@ ca_five_county_covid_hosp_data  %>%
 
 ## Your task
 The 5 county graph is more readable than the first graph, but still has tons of problems if one really wants to compare COVID-19 hospitalization trends across CA counties. Create your own visualization of the 5 county data, remembering best practices that we talked about in the lecture. There are more than one way of doing this, so don't be inhibited by trying to think of "the right" solution. 
+
+Hint: you may want to look up county population size estimates. 
