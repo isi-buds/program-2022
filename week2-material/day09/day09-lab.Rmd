@@ -1,0 +1,49 @@
+---
+title: 'Lab: visualizing CA COVID-19 data'
+output: html_document
+date: '2022-07-21'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  fig.height = 5.5,
+  fig.width = 8
+)
+```
+
+
+```{r load libraries}
+library(tidyverse)
+```
+
+```{r load data}
+## you can downlaod the most up-to-date data
+## and take a look at the data dictionary here: 
+## https://data.ca.gov/dataset/covid-19-hospital-data1
+
+ca_covid_hosp_data <- read_csv("https://raw.githubusercontent.com/isi-buds/program-2022/main/week2-material/day09/covid19hospitalbycounty.csv")
+```
+
+```{r visualize hospitalization trends of all counties}
+ca_covid_hosp_data %>% 
+  ggplot(aes(fill=county, x=todays_date, y=hospitalized_covid_confirmed_patients)) +
+  geom_bar(position="stack", stat="identity")
+```
+
+The above plot tells us something about CA trends, but prevents us from comparing trends among counties, in addition to being absolutely hideous
+
+```{r visualize hospitalization trends for 5 counties}
+ca_five_county_covid_hosp_data <- ca_covid_hosp_data %>%
+  filter(county %in% c("Los Angeles", "Orange", "Sacramento", "Santa Clara", "San Francisco"))
+
+ca_five_county_covid_hosp_data  %>% 
+  ggplot(aes(fill=county, x=todays_date, y=hospitalized_covid_confirmed_patients)) +
+  geom_bar(position="stack", stat="identity")
+```
+
+## Your task
+The 5 county graph is more readable than the first graph, but still has tons of problems if one really wants to compare COVID-19 hospitalization trends across CA counties. Create your own visualization of the 5 county data, remembering best practices that we talked about in the lecture. There are more than one way of doing this, so don't be inhibited by trying to think of "the right" solution. 
