@@ -99,9 +99,9 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 (9am-12pm) | Data viz slide | [`r fa(name = "desktop")`](week2-material/day09/day09-slides-data-sci-viz.pdf) |
+| DBH 4011 (9am-12pm) | Data viz slides | [`r fa(name = "desktop")`](week2-material/day09/day09-slides-data-sci-viz.pdf) |
 | DBH 4011 (9am-12pm) | Lab<br />Covid hospital data | [`r fa(name = "file")`](week2-material/day09/day09-lab.Rmd)<br />[`r fa(name = "file")`](week2-material/day09/covid19hospitalbycounty.csv) |
-| ISEB 1010 (1:30-3:25pm) | | |
+| ISEB 1010 (1:30-3:25pm) | Activate to Captivate Speaker| |
 
 ## Day 10 - July 22
 
