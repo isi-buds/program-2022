@@ -1,0 +1,161 @@
+---
+title: "Lab 10a Solution"
+output: html_document
+date: '2022-07-22'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Joining data
+
+```{r Load in packages}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+Our plot from lab 9 improved on the original plot, but one issue it had was the range of the y-axis. Some counties had much higher counts than others, making it hard to see the trends for those with low counts. Missing from the plot was information about how extreme the counts are given the populations of the counties. For this lab we will be improving upon our plot by normalizing county hospitalization counts using their population.
+
+**1.** The first step is joining the hospitalization data from lab 9 with a data set containing populations of California counties. 
+
+**1a.** To join the data you need to decide which is appropriate for this: `inner_join()`, `right_join()`, `left_join()`, or `full_join()`?
+
+**Solution**  
+Only the counties with data for both hospitalization and population counts are available, which means only those counties kept by `inner_join()` will be plotted.
+
+**1b.** Read in and examine the data sets to decide which column(s) to join by. Adjust column names as needed.
+
+**Solution**  
+```{r Read in data}
+hospital_og <- read_csv(here("week2-material/day09/covid19hospitalbycounty.csv"))
+#glimpse(hospital_og)
+
+population_og <- read_csv(here("week2-material/day10/county_pop.csv"))
+#glimpse(population_og)
+
+population <- clean_names(population_og)
+```
+
+**1c.** Join the data using the appropriate function. Check if there are the expected number of rows after the join.
+
+**Solution**  
+```{r}
+hospital_pop <- population %>% 
+  clean_names() %>% 
+  inner_join(hospital_og, by = "county")
+
+# Check that the number of rows is the same
+nrow(hospital_pop) == nrow(hospital_og)
+```
+
+**1d.** Now we can create a new column where we scale counts of hospitalized COVID confirmed patients by 100,000 people in the county.
+
+**Solution**  
+```{r}
+hospital_pop <- hospital_pop %>% 
+  mutate(hosp_covid_pos_patients_scaled = hospitalized_covid_confirmed_patients / (population / 100000))
+```
+
+**1e.** Now we will update out lab 9 plots by replacing the y-axis with our new scaled variable. You can update your old plot or the one from the lab 9 solution. Make sure your axis label represents the new variable.
+
+**Solution**  
+```{r color and county selection}
+county_colors <- c(Orange = "#E69F00", Sacramento = "#A857E6",`Santa Clara` = "#0072B2", `Los Angeles` = "#CC79A7", `San Francisco` = "#009E73")
+
+ca_five_county_covid_hosp_data <- hospital_pop %>%
+  filter(county %in% c("Los Angeles", "Orange", "Sacramento", "Santa Clara", "San Francisco"))
+```
+
+```{r plot scaled time series}
+ca_five_county_covid_hosp_data %>% 
+  ggplot(aes(x=todays_date, y=hosp_covid_pos_patients_scaled, group = county, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Hospitalized COVID patients \n per 100,000 people"
+  ) + 
+  ggtitle("CA County COVID-19 Hospitalization Trends")
+```
+
+**1f.** Also plot you lab 9 plot and compare. What differences do you see?
+
+**Solution**  
+```{r plot time series}
+ca_five_county_covid_hosp_data %>% 
+  ggplot(aes(x=todays_date, y=hospitalized_covid_confirmed_patients, group = county, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Hospitalized COVID patients"
+  ) + 
+  ggtitle("CA County COVID-19 Hospitalization Trends")
+```
+
+In the unscaled plot Los Angeles county's max COVID hospitalizations was 4 times as high as that for Orange county. Now that we have scaled by population we see that Los Angeles and Orange county have approximately the same proportion of their residents hospitalized with confirmed COVID.
+
+
+## Dates  
+We will be working with the COVID hospital data again for this section. Note `read_csv()` attempts to recognize column types such as dates while `read.csv` does not. Sometimes `read_csv()` cannot identify the date format so it will need to be manually set. 
+
+**2a.** Read in the hospital data using `read.csv` and note the column type for `todays_date`. 
+
+**Solution**  
+```{r}
+hospital_og <- read.csv(here("week2-material/day09/covid19hospitalbycounty.csv"))
+```
+
+`todays_date` is saved as a character vector.
+
+We will manually set this column as a date using `as_date()`. If `read_csv()` could not determine the date format we can provide it. We can use `stamp()` to get a list of suggested date formats or we can view a [chart of date formats](https://www.r-bloggers.com/2013/08/date-formats-in-r/). We then select the correct one and provide it as the `format` argument in `as_date()`.
+
+**2b.** Typically `as_date()` can recognize the date format so it does not need to be specified. Make `todays_date` into a date column, don't forget to load in the `lubridate` package.
+
+**Solution**  
+```{r}
+library(lubridate)
+
+hospital <- hospital_og %>% 
+  mutate(todays_date = as_date(todays_date))
+```
+
+**3.** Above was an exercise in creating date variables, now we will move on to specifying axis labels with dates. The dates displayed on the axis of our plot are arbitrary and do not necessarily look nice. We will use `scale_x_date()` to manually specify the x-axis of our plot. 
+
+**3a.** First, make a sequence of dates called `date_breaks` that begins at June 1, 2020, ends at June 1, 2022, and is spaced by 6 months. 
+
+As an example examine what `seq(from = as_date("2020-01-01"), to = as_date("2021-01-01"), by = "60 day")` produces. 
+
+**Solution**  
+```{r}
+date_breaks <- seq(
+  from = as_date("2020-06-01"), 
+  to = as_date("2022-06-01"), 
+  by = "6 month"
+)
+```
+
+**3b.** Now add `scale_x_date(breaks = date_breaks, date_labels = "%b %Y")` to the end of your scaled plot code. Note %b will use the abbreviated month name and %Y will give 4 digit year.
+
+```{r plot sclaed time series with specified dates}
+ca_five_county_covid_hosp_data %>% 
+  ggplot(aes(x=todays_date, y=hosp_covid_pos_patients_scaled, group = county, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Hospitalized COVID patients \n per 100,000 people"
+  ) + 
+  ggtitle("CA County COVID-19 Hospitalization Trends") +
+  scale_x_date(breaks = date_breaks, date_labels = "%b %Y")
+```
