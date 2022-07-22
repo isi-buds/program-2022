@@ -107,7 +107,7 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | Joining data <br/> Dates <br/> Lab 10 | <br/> <br/> [`r fa(name = "file")`](week2-material/day10/day10-lab-a.Rmd) |
 
 ## Day 11 - July 25
 
