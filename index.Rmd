@@ -107,7 +107,8 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | Data wrangling: joining data & Dates <br/> Lab 10 | [`r fa(name = "desktop")`](week2-material/day10/day10-data-wrangling.html) <br/> [`r fa(name = "file")`](week2-material/day10/day10-lab-a.Rmd) |
+| DBH 4011 | Data wrangling: joining data & Dates | [`r fa(name = "desktop")`](week2-material/day10/day10-data-wrangling.html) |
+| DBH 4011 | Lab 10 <br/> Lab 10 solution | [`r fa(name = "file")`](week2-material/day10/day10-lab-a.Rmd) <br/> [`r fa(name = "file")`](week2-material/day10/day10-lab-a-solution.Rmd)|
 
 ## Day 11 - July 25
 
