@@ -1,0 +1,235 @@
+---
+title: "Lab 10b"
+author: "Catalina Medina and Vladimir Minin"
+output: html_document
+date: '2022-07-22'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+```{r load libraries}
+library(tidyverse)
+library(rcarbon) ## we need this for sliding window averages
+```
+
+
+## Adding COVID cases and deaths data
+
+So far we have looked at COVID hospitalization data. Let's now add cases and deaths to our exploratory analysis of the COVID pandemic in California.
+
+**1** Familiarize yourself with the new dataset.
+
+**1a.** First, download the California cases and deaths data from the [California Open Data Portal] (https://data.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state). 
+
+**1b.** Save the csv file into your lab10 local directory and add it to your github repository. 
+
+
+**1c.** Read the data dictionary that accompanies the data.
+
+
+**2** Explore time trends
+
+```{r read in cases and deaths data}
+ca_covid_data_og <- read_csv("covid19cases_test.csv")
+ca_covid_data <- ca_covid_data_og %>% 
+  rename(county = area)
+```
+
+**2a.** For selected counties (same ones we used in the morning), plot time series of cases per 100,000 people in the county.
+
+```{r extract 5 counties}
+ca_five_county_covid_data <- ca_covid_data %>% 
+  filter(county %in% c("Los Angeles", "Orange", "Sacramento", "Santa Clara", "San Francisco")) %>% 
+  mutate(county = factor(county))
+
+county_colors <- c(Orange = "#E69F00", Sacramento = "#A857E6",`Los Angeles` = "#0072B2", `Santa Clara` = "#CC79A7", `San Francisco` = "#009E73")
+
+population_scale <- 100000
+```
+
+```{r plot cases time series}
+ca_five_county_covid_data <- ca_five_county_covid_data %>% 
+  mutate(ave_cases = runMean(cases, 7)) %>% 
+  mutate(scaled_ave_cases = ave_cases / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_cases, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Cases per 100,000 people"
+  ) + 
+  ggtitle("CA County COVID-19 Case Count Trends \n (7 Day Moving Average)")
+```
+
+**2b.** For selected counties (same ones we used in the morning), plot time series of number of tests per 100,000 people in the county.
+```{r plot tests time series}
+ca_five_county_covid_data <- ca_five_county_covid_data %>% 
+  mutate(ave_tests = runMean(total_tests, 7)) %>% 
+  mutate(scaled_ave_tests = ave_tests / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_tests, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Tests per 100,000 people"
+  ) + 
+  ggtitle("CA County COVID-19 Test Count Trends \n (7 Day Moving Average)")
+```
+
+**2c.** For selected counties (same ones we used in the morning), plot time series of number of deaths per 100,000 people in the county.
+```{r plot deaths time series}
+ca_five_county_covid_data <- ca_five_county_covid_data %>% 
+  mutate(ave_deaths = runMean(deaths, 7)) %>% 
+  mutate(scaled_ave_deaths = ave_deaths / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_deaths, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Deaths per 100,000 people"
+  ) + 
+  ggtitle("CA County COVID-19 Deaths Count Trends \n (7 Day Moving Average)")
+```
+
+**2d.** For selected counties (same ones we used in the morning), plot time series of test positivity -- proportion of positive tests on a given day.
+```{r plot test positivity time series}
+ca_five_county_covid_data <- ca_five_county_covid_data %>% 
+  mutate(per_pos_tests = positive_tests / total_tests) %>% 
+  mutate(ave_per_pos_tests = runMean(per_pos_tests, 7)) 
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = ave_per_pos_tests, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Test positivity"
+  ) + 
+  ggtitle("CA County COVID-19 Test Positivity Trends \n (7 Day Moving Average)")
+```
+
+**3** Explore relationships between COVID data streams/indicators
+
+**3a.** Case-to-fatality-ratio (CFR) is an important epidemiological quantity. It is defined as the total number of deaths divided by the total number of  cases over a specified period of time. CFR serves as an upper bound for another important epidemiological unknown -- infection-to-fatality ratio (IFR). Create a plot that shows how CFR was changing during the course of the pandemic.
+```{r plot CFR time series}
+ca_five_county_covid_data <- ca_five_county_covid_data %>% 
+  mutate(cfr = deaths / cases) %>% 
+  mutate(ave_per_pos_tests = runMean(per_pos_tests, 7)) %>% 
+  mutate(scaled_ave_per_pos_tests = ave_per_pos_tests / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_per_pos_tests, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Daily Case-to-fatality-ratio"
+  ) + 
+  ggtitle("CA County COVID-19 Daily CFR Trends \n (7 Day Moving Average)")
+```
+
+**3b.** Plot changes in the case-to-hostpitalization-ratio. Notice that we cannot compute cumulative hospitalization,  so we have to compute these ratios on a daily basis. Notice this task requires joining of hospitalization and cases/deaths data. What are potential problems with summarizing the data this way?
+
+```{r join case and hospital data}
+hospital_og <- read_csv("covid19hospitalbycounty.csv")
+
+joined_case_hospital <- hospital_og %>% 
+  rename(date = todays_date) %>% 
+  select(county, date, hospitalized_covid_confirmed_patients) %>% 
+  inner_join(ca_five_county_covid_data)
+```
+
+```{r plot CHR time series}
+ca_five_county_covid_data <- joined_case_hospital %>% 
+  mutate(case_to_hosp_ratio = hospitalized_covid_confirmed_patients / cases) %>% 
+  mutate(ave_case_to_hosp_ratio = runMean(case_to_hosp_ratio, 7)) %>% 
+  mutate(scaled_ave_case_to_hosp_ratio = ave_case_to_hosp_ratio / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_case_to_hosp_ratio, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Daily Case-to-hospitalization-ratio"
+  ) + 
+  ggtitle("CA County COVID-19 Daily CHR Trends \n (7 Day Moving Average)")
+```
+
+
+**3c.** Same as 3b, but now plot change of the hospitalization-to-death-ratio.  
+
+```{r plot HDR time series}
+ca_five_county_covid_data <- joined_case_hospital %>% 
+  mutate(hosp_to_death_ratio = deaths / hospitalized_covid_confirmed_patients) %>% 
+  mutate(ave_hosp_to_death_ratio = runMean(hosp_to_death_ratio, 7)) %>% 
+  mutate(scaled_ave_hosp_to_death_ratio = ave_hosp_to_death_ratio / population * population_scale)
+
+ca_five_county_covid_data %>% 
+  ggplot(aes(x = date, y = scaled_ave_hosp_to_death_ratio, color = county)) +
+  geom_line(size = 1.3) + 
+  scale_color_manual(name = "County", values = county_colors) + 
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Daily Hospitalization-to-death-ratio"
+  ) + 
+  ggtitle("CA County COVID-19 Daily HDR Trends \n (7 Day Moving Average)")
+```
+
+**3d** Compare cumulative summaries of cases and deaths across all counties over the whole time period.
+```{r plot cumulative cases time series}
+cummulative_cases_deaths <- ca_covid_data %>%
+  group_by(date) %>% 
+  summarize(
+    cumulative_cases = sum(cumulative_cases, na.rm = TRUE),
+    cumulative_deaths = sum(cumulative_deaths, na.rm = TRUE)
+  )
+
+cumulative_cases_plot <- cummulative_cases_deaths %>% 
+  ggplot(aes(x = date, y = cumulative_cases)) +
+  geom_point(size = 1.3) + 
+  scale_y_continuous(label = scales::comma) +
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Cumulative cases"
+  ) + 
+  ggtitle("CA Cumulative COVID-19 Cases")
+
+cumulative_deaths_plot <- cummulative_cases_deaths %>% 
+  ggplot(aes(x = date, y = cumulative_deaths)) +
+  geom_point(size = 1.3) + 
+  scale_y_continuous(label = scales::comma) +
+  theme_minimal(base_size = 15) + 
+  labs(
+    x = "Date",
+    y = "Cumulative deaths"
+  ) + 
+  ggtitle("CA Cumulative COVID-19 Deaths")
+
+gridExtra::grid.arrange(
+  cumulative_cases_plot, cumulative_deaths_plot,
+  nrow = 2
+)
+```
+
