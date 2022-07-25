@@ -115,7 +115,7 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | Linear models and generalized linear models | [`r fa(name = "desktop")`](week3-material/day11/day11-lecture-GLM.pdf) |
 
 ## Day 12 - July 26
 
