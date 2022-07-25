@@ -128,6 +128,7 @@ library(fontawesome)
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
 | DBH 4011 | | |
+| DBH 4011 | Resume writing workshop | |
 
 ## Day 14 - July 28
 
