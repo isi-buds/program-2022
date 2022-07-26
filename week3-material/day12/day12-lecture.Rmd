@@ -178,8 +178,8 @@ where $\pi_i=E(Y_i|X_i)$.
 # Poisson Regression
 
 ## Poisson Regression: The Model
-* Poisson regression is often used to mode count data
-* Why count data are special?
+* Poisson regression is often used to model count data
+* Why are count data special?
     + Count data are non-negative
     + Count data take integer values
 * Count data often violate the assumption of ``constant variance" 
@@ -309,14 +309,17 @@ poisson_obs_fit_plt
 * Next, we would like to discuss the significance of the image_categ variable. To do so, we first look at the deviance of a GLM object
 * The deviance of a GLM object obj 
 is $$2[log(L_{saturated})- log (L_{obj})]$$ 
-* What is the saturated model?
-    + Logistic: $\pi_i=y_i$ and $L_{saturated}=1$
-    + Poisson: $\lambda_i = y_i$ and $L_{saturated}= \prod_i \frac{y_i^{y_i}e^{-y_i}}{y_i!}$. 
+* What is the null hypothesis of no visual-selection?
+$$H_0: \beta_{Animal}=\beta_{Fruit}=\beta_{Kids}=\beta_{Military}=\beta_{Space}$$
+* What is the d.f. in a likelihood ratio test (LRT)?
 
 ## Poission Regression: The Overall Significance
 * Consider two \underline{nested} models obj1 and obj2, the difference in their deviances is
 $$2[log(L_{obj2}) - log(L_{obj1})],$$
 which is the LRT statistic. 
+* What is the saturated model?
+    + Logistic: $\pi_i=y_i$ and $L_{saturated}=1$
+    + Poisson: $\lambda_i = y_i$ and $L_{saturated}= \prod_i \frac{y_i^{y_i}e^{-y_i}}{y_i!}$. 
 
 ## Poission Regression: The Overall Significance
 ```{r}
@@ -333,17 +336,19 @@ anova(poisson_fit0, poisson_fit, test = "Rao")
 
 ## Poission Regression: The Overall Significance
 ```{r}
-# Test for visual selectivity: Wald test
-Wald.stat=poisson_fit$coefficients %*% 
-  solve (summary(poisson_fit)$cov.unscaled) %*% 
-  poisson_fit$coefficients
+# Test for visual selectivity: Wald test. I will explain reparameterization in a few slides
+poisson_fit_repara <- glm(n_spikes ~ image_categ, data = chosen_neuron_data,
+                   family = poisson(link="log"))
+Wald.stat=poisson_fit_repara$coefficients[2:5] %*% 
+  solve (summary(poisson_fit_repara)$cov.unscaled[2:5,2:5]) %*% 
+  poisson_fit_repara$coefficients[2:5]
 1-pchisq(Wald.stat, df=4)
 ```
 
 ## Poission Regression: Model Interpretation
 ```{verbatim}
-## Estimate Std. Error z value Pr(>|z|)
-## Animal -2.995732 0.9999998 -2.995733 2.737861e-03
+##                       Estimate Std. Error z value Pr(>|z|)
+## image_categFruit      1.2809     0.1179  10.869  < 2e-16 ***
 ```
 * $\hat\beta_{Fruit}=1.2809$: What does it tell us?
 * Recall that we used the log link
@@ -362,13 +367,23 @@ Wald.stat=poisson_fit$coefficients %*%
 ```{r, message=FALSE, echo=FALSE}
 poisson_fit_repara <- glm(n_spikes ~ image_categ, data = chosen_neuron_data,
                    family = poisson(link="log"))
-
 ```
 * Parameters: 
     + poisson_fit: 
     + poisson_fit_repara:
-\vspace{5cm}
+* Compare the summary of the two models:
+* Are they different models? 
+\vspace{2cm}
 
+## Parameterization 1: without intercept
+```{r}
+summary(poisson_fit)
+```
+
+## Parameterization 2: with intercept
+```{r}
+summary(poisson_fit_repara)
+```
 ## Linear Functions of Parameters
 * The Poisson regression we fit provides estimates of $\beta_{Animal}$, $\beta_{Fruit}$, $\beta_{Kids}$, $\beta_{Military}$, $\beta_{space}$, which are the log of the Poisson rates
 * What if we are interested in difference between specific groups? e.g., 
