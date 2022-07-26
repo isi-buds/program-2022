@@ -121,7 +121,7 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 3011 | | |
+| DBH 3011 | Regression continued | [`r fa(name = "desktop")`](week3-material/day12/day12-lecture.pdf) (Rmd: [`r fa(name = "file")`](week3-material/day12/day12-lecture.Rmd)) |
 
 ## Day 13 - July 27
 
