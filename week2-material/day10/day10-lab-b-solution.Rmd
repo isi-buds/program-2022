@@ -218,7 +218,7 @@ cumulative_cases_deaths %>%
     x = "Cumulative cases per 100,000 people",
     y = "Cumulative deaths per 100,000 people"
   ) + 
-  ggtitle("CA Cumulative COVID-19 Cases vs Deaths Plot")
+  ggtitle("CA County-Level Cumulative COVID-19 Cases vs Deaths")
 ```
 
 The relationship between cases and deaths is fairly linear, but the variation is substantial. A very small Alpine county (population size is 1117 people) reported zero deaths due to COVID-19! Even after excluding this county, the range of cumulative deaths per 100,000 people is between 50 and 500, spanning one order of magnitude. The range of cumulative cases per 100,000 people is much smaller. Imperial county number of cumulative deaths stands out as an unusually high. 
