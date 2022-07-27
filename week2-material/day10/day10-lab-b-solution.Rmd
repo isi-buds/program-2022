@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r load libraries}
 library(tidyverse)
 library(rcarbon) ## we need this for sliding window averages
+library(ggrepel) ## for labeling points with text without much overlap
 ```
 
 
@@ -125,26 +126,30 @@ ca_five_county_covid_data %>%
   ggtitle("CA County COVID-19 Test Positivity Trends \n (7 Day Moving Average)")
 ```
 
+Note that the recent decrease in positivity could be to delay in reporting of test results.
+
 **3** Explore relationships between COVID data streams/indicators
 
 **3a.** Case-to-fatality-ratio (CFR) is an important epidemiological quantity. It is defined as the total number of deaths divided by the total number of  cases over a specified period of time. CFR serves as an upper bound for another important epidemiological unknown -- infection-to-fatality ratio (IFR). Create a plot that shows how CFR was changing during the course of the pandemic.
 ```{r plot CFR time series}
 ca_five_county_covid_data <- ca_five_county_covid_data %>% 
-  mutate(cfr = deaths / cases) %>% 
+  mutate(cfr = cumulative_deaths / cumulative_cases) %>% 
   mutate(ave_per_pos_tests = runMean(per_pos_tests, 7)) %>% 
   mutate(scaled_ave_per_pos_tests = ave_per_pos_tests / population * population_scale)
 
 ca_five_county_covid_data %>% 
-  ggplot(aes(x = date, y = scaled_ave_per_pos_tests, color = county)) +
+  ggplot(aes(x = date, y = cfr, color = county)) +
   geom_line(size = 1.3) + 
   scale_color_manual(name = "County", values = county_colors) + 
   theme_minimal(base_size = 15) + 
   labs(
     x = "Date",
-    y = "Daily Case-to-fatality-ratio"
+    y = "Daily case-to-fatality-ratio"
   ) + 
   ggtitle("CA County COVID-19 Daily CFR Trends \n (7 Day Moving Average)")
 ```
+
+CFR is  higher and more variable during early stages of the pandemic because of shortage of testing during that period that lead to infections severely underreported.
 
 **3b.** Plot changes in the case-to-hostpitalization-ratio. Notice that we cannot compute cumulative hospitalization,  so we have to compute these ratios on a daily basis. Notice this task requires joining of hospitalization and cases/deaths data. What are potential problems with summarizing the data this way?
 
@@ -154,7 +159,7 @@ hospital_og <- read_csv("covid19hospitalbycounty.csv")
 joined_case_hospital <- hospital_og %>% 
   rename(date = todays_date) %>% 
   select(county, date, hospitalized_covid_confirmed_patients) %>% 
-  inner_join(ca_five_county_covid_data)
+  inner_join(ca_five_county_covid_data, by=c("county", "date"))
 ```
 
 ```{r plot CHR time series}
@@ -175,6 +180,7 @@ ca_five_county_covid_data %>%
   ggtitle("CA County COVID-19 Daily CHR Trends \n (7 Day Moving Average)")
 ```
 
+This comparison is problematic because we are implicitly comparing cases and hospitalized patients in the same time periods. However, cases in one time period become hospitalized patients after 5-10 days, so we are comparing two time series that are misaligned with respect to time.
 
 **3c.** Same as 3b, but now plot change of the hospitalization-to-death-ratio.  
 
@@ -198,38 +204,21 @@ ca_five_county_covid_data %>%
 
 **3d** Compare cumulative summaries of cases and deaths across all counties over the whole time period.
 ```{r plot cumulative cases time series}
-cummulative_cases_deaths <- ca_covid_data %>%
-  group_by(date) %>% 
-  summarize(
-    cumulative_cases = sum(cumulative_cases, na.rm = TRUE),
-    cumulative_deaths = sum(cumulative_deaths, na.rm = TRUE)
-  )
+most_recent_date = ca_covid_data %>% summarise(max_date = max(date, na.rm=T))
 
-cumulative_cases_plot <- cummulative_cases_deaths %>% 
-  ggplot(aes(x = date, y = cumulative_cases)) +
+cumulative_cases_deaths <- ca_covid_data %>% filter(date == most_recent_date & area_type == "County")
+
+
+cumulative_cases_deaths %>% 
+  ggplot(aes(x = cumulative_cases/population*100000, y = cumulative_deaths/population*100000)) +
   geom_point(size = 1.3) + 
-  scale_y_continuous(label = scales::comma) +
+ geom_text_repel(aes(label=county)) +
   theme_minimal(base_size = 15) + 
   labs(
-    x = "Date",
-    y = "Cumulative cases"
+    x = "Cumulative cases per 100,000 people",
+    y = "Cumulative deaths per 100,000 people"
   ) + 
-  ggtitle("CA Cumulative COVID-19 Cases")
-
-cumulative_deaths_plot <- cummulative_cases_deaths %>% 
-  ggplot(aes(x = date, y = cumulative_deaths)) +
-  geom_point(size = 1.3) + 
-  scale_y_continuous(label = scales::comma) +
-  theme_minimal(base_size = 15) + 
-  labs(
-    x = "Date",
-    y = "Cumulative deaths"
-  ) + 
-  ggtitle("CA Cumulative COVID-19 Deaths")
-
-gridExtra::grid.arrange(
-  cumulative_cases_plot, cumulative_deaths_plot,
-  nrow = 2
-)
+  ggtitle("CA Cumulative COVID-19 Cases vs Deaths Plot")
 ```
 
+The relationship between cases and deaths is fairly linear, but the variation is substantial. A very small Alpine county (population size is 1117 people) reported zero deaths due to COVID-19! Even after excluding this county, the range of cumulative deaths per 100,000 people is between 50 and 500, spanning one order of magnitude. The range of cumulative cases per 100,000 people is much smaller. Imperial county number of cumulative deaths stands out as an unusually high. 

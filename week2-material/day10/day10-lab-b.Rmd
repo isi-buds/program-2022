@@ -41,7 +41,7 @@ So far we have looked at COVID hospitalization data. Let's now add cases and dea
 
 **3** Explore relationships between COVID data streams/indicators
 
-**3a.** Case-to-fatality-ratio (CFR) is an important epidemiological quantity. It is defined as the total number of deaths divided by the total number of  cases over a specified period of time. CFR serves as an upper bound for another important epidemiological unknown -- infection-to-fatality ratio (IFR). Create a plot that shows how CFR was changing during the courseof the pandemic.
+**3a.** Case-to-fatality-ratio (CFR) is an important epidemiological quantity. It is defined as the total number of deaths divided by the total number of  cases over a specified period of time. CFR serves as an upper bound for another important epidemiological unknown -- infection-to-fatality ratio (IFR). Create a plot that shows how CFR was changing during the course of the pandemic.
 
 **3b.** Plot changes in the case-to-hostpitalization-ratio. Notice that we cannot compute cumulative hospitalization,  so we have to compute these ratios on a daily basis. Notice this task requires joining of hospitalization and cases/deaths data. What are potential problems with summarizing the data this way?
 
