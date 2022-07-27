@@ -1,0 +1,389 @@
+---
+title: "UC Irvine  ISI-BUDS Day 13"
+author: "Zhaoxia Yu"
+date: "7/27/2022"
+geometry: "left=0.5cm,right=2.5cm,top=1cm,bottom=1cm"
+output: 
+  beamer_presentation:
+    theme: "Goettingen"
+    colortheme: "whale"
+    fonttheme: "structurebold"
+    slide_level: 2
+header-includes:
+  \setbeamertemplate{footline}[page number]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Study Goals
+* Introduction: Revisiting LM
+\vspace{0.2cm}
+* Correlated Data
+    + Sources of correlation 
+    + The consequence of ignoring data dependence: a simulation study
+\vspace{0.2cm}
+* Model correlated data using linear mixed-effects model
+\vspace{0.2cm}
+* Examples of LME: Example 1
+\vspace{0.2cm}
+* The slides are based on my published work:
+https://doi.org/10.1016/j.neuron.2021.10.030
+https://yu-zhaoxia.github.io/MM_in_Neuroscience/
+
+# Introduction
+## Revisiting LM
+* Basic assumptions of LM
+$$Y_i = \beta_0 + x_{i1} \times \beta_1+ … + x_{ip} \times \beta_p + \epsilon_i , i =1, …, n$$
+    + $E(\epsilon_i)=0$, which is equivalent to \textcolor{red}{$E(Y_i|X_i)=\beta_0 + x_{i1} \times \beta_1+ … + x_{ip} \times \beta_p$}
+    + $Var(\epsilon_i)=\sigma^2$. Note, this is equivalent to say \textcolor{red}{$Var(Y_i|X_i)=\sigma^2$}.
+    + $(\epsilon_1, \cdots, \epsilon_n)$ are mutually \textcolor{red}{independent}
+* Question: what if the observations are dependent?
+
+
+
+
+# Correlated Data
+
+## Sources of correlation {data-background="Fig00.jpg"}
+* Clustered data: all fifth graders in the Irvine Unified School District
+\vspace{0.5cm}
+* Data with spatial correlation: today's highest temperatures of all cities in California
+\vspace{0.5cm}
+* Data with temporal correlation: hourly temperatures of Irvine within a day
+\vspace{0.5cm}
+* ...
+
+## Sources of correlation {data-background="Fig00.jpg"}
+```{r out.width="100%", echo=FALSE}
+knitr::include_graphics("Fig00.jpg")
+```
+
+
+## Example 1: Data
+```{r S1, out.width="100%", fig.cap="Normalized pCREB staining intensity from 1,200 neurons. The values in each cluster were from one animal. In total, pCREB was measuredfrom 24 mice: saline (7 mice), 24h (6 mice), 48h (3 mice), 72h (3 mice), 1week (5 mice) after treatment.", echo=FALSE}
+knitr::include_graphics("Fig1S.jpg")
+```
+
+## Example 1: Data
+```{r, message=FALSE}
+Ex1 = read.csv("https://www.ics.uci.edu/~zhaoxia/Data/BeyondTandANOVA/Example1.txt", head=T)
+#factor the treatment IDs
+Ex1$treatment_idx = as.factor(Ex1$treatment_idx)
+dim(Ex1)# checking the dimensions of the dataset
+names(Ex1)# checking the names of each column
+```
+
+## Example 1: Data
+```{r}
+table(Ex1$treatment_idx)
+table(Ex1$midx)
+#table(Ex1$treatment, Ex1$midx)
+```
+
+## Example 1: Ignore data dependence  (\textcolor{red}{incorrect} analysis)
+* A \textcolor{red}{common} analysis is to ignore data dependence 
+* Representative descriptions of inappropriate analyses
+    + ‘‘t(28656) = 314 with p<10-10 over a total of n=28657 neurons pooled across six mice,’’ 
+    + ‘‘n = 377 neurons from four mice, two-sided Wilcoxon signed rank test,’’
+    +  ‘‘610 A cells, 987 B cells and 2584 C cells from 10 mice, oneway ANOVA and Kruskal–Wallis test,’’ 
+    + ‘‘two-sided paired t test, n=1597 neurons from 11 animals, d.f. = 1596,’’
+
+## Example 1: Ignore data dependence  (\textcolor{red}{incorrect} analysis)
+```{r}
+obj.lm=lm(res~treatment_idx, data=Ex1)
+coef.table=summary(obj.lm)$coefficients
+row.names(coef.table)=c("Saline", "24h-S", "48h-S", "72h-S", "1wk-S")
+print(coef.table)
+```
+
+## Example 1: Ignore data dependence (\textcolor{red}{incorrect} analysis)
+```{r}
+anova(obj.lm)
+#The same analysis can be done by the "aov" function
+```
+\vspace{-0.5cm}
+```{R, include=FALSE}
+obj.aov=aov(res~treatment_idx, data=Ex1)
+summary(obj.aov)
+```
+\vspace{-0.3cm}
+* What is \textcolor{red}{wrong} with the analysis?
+
+
+## Example 1: Understand the dependence in data
+* From Figure 1, what can we say about observations within and between animals?
+* Data are clustered in animals (mice)
+```{r out.width="100%", echo=FALSE}
+knitr::include_graphics("Fig1S.jpg")
+```
+
+
+## Intra-class Correlation (ICC)
+* We use ICC to quantify the dependence due to clustering. It is defined as 
+$$ICC=\frac{\sigma_b^2}{\sigma_b^2 + \sigma_e^2},$$
+where 
+    + $\sigma_b^2$ denotes the between-class variance 
+    + $\sigma_e^2$ denotes the within-class variance
+    + The ICC for naturally occuring clusters is often between 0 and 1
+    + $ICC=0$: the data are uncorrelated
+    + $ICC=1$: all the observations in each cluster are identical 
+
+
+## Example 1: Intra-class Correlation (ICC)
+```{r, message=FALSE, warning=FALSE}
+### load the ICC library
+library(ICC) 
+### conduct ICC analysis by organizing all the information into a data frame
+icc.analysis=data.frame(n=rep(0,5), icc=rep(0,5), design.effect=rep(0,5),
+effective.n=rep(0,5), M=rep(0,5), cells=rep(0,5))
+# The ICC is computed as follows (code won't show in slides)
+```
+ 
+```{r, include=FALSE, echo=FALSE}
+for(i in 1:5){
+    trt= Ex1[Ex1$treatment_idx==i,]
+    trt$midx=factor(trt$midx)
+    icc=ICCbare(factor(trt$midx), trt$res) #ICCbare is a function in the ICC package
+    icc.analysis$cells[i]=dim(trt)[1]
+    M=dim(trt)[1]/length(unique( trt$midx))
+    def=1 + icc*(M-1)
+    icc.analysis$n[i]=length(unique( trt$midx))
+    icc.analysis$icc[i]=icc
+    icc.analysis$design.effect[i]=def
+    icc.analysis$effective.n[i]=dim(trt)[1]/def
+    icc.analysis$M[i]=M
+}
+tmp=round(t(icc.analysis[,c(6,2)]),3)
+row.names(tmp)= c("#of cells", "ICC")
+knitr::kable(
+  tmp,
+  col.names = c("Saline (n=7)","24h (n=6)","48h (n=3)","72h (n=3)","1wk (n=5)")
+)
+```
+
+## Intra-class Correlation (ICC): Example 1
+```{r, eval=FALSE, echo=FALSE}
+print(icc.analysis)
+```
+```{r out.width="100%", echo=FALSE}
+knitr::include_graphics("Fig_Table1.jpg")
+```
+
+## Intra-class Correlation (ICC): Example 1
+* The dependency due to clustering is substantial
+* the 1,200 neurons should not be treated as 1,200 independent cells
+* \textcolor{red}{Design effect}: $D_{eff}=1+(M-1)ICC$, where $M$ is the average cluster size
+* \textcolor{red}{Effective sample size}: $n_{eff}=n/D_{eff}$.
+
+## The consequence of ignoring data dependence: a simulation study
+* We generated 1000 data sets
+    + each follows the same ICC structure of Example 1
+    + data are simulated under the assumptino of no difference between the five treatments/conditions
+    + each data set is analyzed with the regular LM/ANOVA, without accounting for the data dependence. 
+    + significance level is set at $\alpha=0.05$. 
+* Let's guess: What is the type I error rate (proportion of times rejecting the null hypothesis wrongly)? 
+
+## Type I vs Type II erros
+* A Type I error (false positive): rejecting the null hypothesis when it is true
+\vspace{0.3cm}
+* A Type II error (false negative): failing to reject the null hypothesis when it is false 
+\vspace{0.3cm}
+* The distribution of p values under the null hypothesis
+\vspace{0.3cm}
+* Significance level $\alpha$: 
+\vspace{0.3cm}
+* If the null hypothesis is true and $\alpha=0.05$, what is the expected/theoretical type I error rate? 
+
+## The consequence of ignoring data dependence: a simulation study
+```{r, eval = FALSE, cache= TRUE}
+source("https://www.ics.uci.edu/~zhaoxia/Data/BeyondTandANOVA/simulation_TypeIErrorRate.R")
+```
+```{r out.width="100%", echo=FALSE}
+knitr::include_graphics("Fig3.jpg")
+```
+
+
+# Linear-Mixed Effects Model
+## A Motivating Example of LME: Example 1 (\textcolor{red}{the wrong model}) 
+* The model \textcolor{red}{without} accounting for dependence:
+$$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + \cdots + x_{ij,4}\beta_4 + \epsilon_{ij}, i=1, \cdots, 24; j=1, \cdots, n_i;$$
+where     
+    + where $n_i$ is the number of observations from the $i$th mouse and $\sum_{i=1}^{24}n_i=1200$
+    + $\epsilon_{ij}$ represents the deviation in pCREB immunoreactivity of observation (cell) $j$ in mouse $i$ from the mean pCREB immunoreactivity of mouse i.
+
+## A Motivating Example of LME: Example 1  (\textcolor{red}{the wrong model}) 
+* The model \textcolor{red}{without} accounting for dependence:
+$$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + \cdots + x_{ij,4}\beta_4 + \epsilon_{ij}, i=1, \cdots, 24; j=1, \cdots, n_i;$$
+where the coefficients $\beta_0, \beta_1, \beta_2, \beta_3, \beta_4$ are assumed to be fixed but unknown parameters
+    + $\beta_0$ is the intercept (the mean of the baseline)
+    + $\beta_1$ is the effect (change) at 24h, compared to the baseline
+    + $\beta_2$ is the effect (change) at 48h, ...
+    + $\beta_3$ is the effect (change) at 72h, ...
+    + $\beta_4$ is the effect (change) at 1wk, ...
+
+## A Motivating Example of LME: Example 1  (\textcolor{red}{the wrong model}) 
+* The model \textcolor{red}{without} accounting for dependence:
+$$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + \cdots + x_{ij,4}\beta_4 + \epsilon_{ij}, i=1, \cdots, 24; j=1, \cdots, n_i;$$
+* We use four dummy variables to denote treatmenest/conditions, which are the time after treatment
+    + $x_{ij,1} = 1$ for 24 hours and 0 otherwise
+    + $x_{ij,2} = 1$ for 48 hours and 0 otherwise
+    + $x_{ij,3} = 1$ for 72 hours and 0 otherwise
+    + $x_{ij,4} = 1$ for 1 week and 0 otherwise after ketamine treatments, respectively.
+
+## A Motivating Example of LME: Example 1 
+* Cells from the same animal share the same enviroment
+    + We add the subject-specific effect $u_i$ into the LM
+    + $(u_1, \cdots, u_{24})$ are assumed to be independent and identically distributed (i.i.d.) from $N(0,\sigma_b^2)$
+$$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + … + x_{ij,4}\beta_4 + \textcolor{red}{u_i} + \epsilon_{ij}, i=1, …, 24; j=1, …, n_i;$$
+* This is model is a mixed-effects model because
+    + $(u_1, \cdots, u_{24})$ are random-effect coefficients
+    + $(\beta_0, \cdots, \beta_{24})$ are fixed-effect coefficients
+
+## A Motivating Example of LME: Example 1 
+* Including the random efficients introduces correlation between two observations from the same cluster:
+    + for $j\not=j'$, $cov(Y_{ij}, Y_{ij'})=$
+    \vspace{2cm}
+    + for $i\not=i'$, $cov(Y_{ij}, Y_{i'j'})=$
+    \vspace{2cm}
+    
+## A Better Representation of the model
+* Introduce dummy variables for the animals: let the vector ($z_{ij,1}, …, z_{ij,24}$) be the dummy variables for the cluster/animal memberships such that $z_{ij,k}=1$ for $i=k$ and 0 otherwise. 
+* Then the LME can be rewritten to 
+    $$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + … + x_{ij,4}\beta_4 + \textcolor{red}{z_{ij,1}u_1 + … + z_{ij,24}u_{24}} + \epsilon_{ij},$$
+    $i=1, …, 24; j=1, …, n_i;$
+
+## LME 
+* A more compact form of the model presented in the previous slide: 
+    $$ Y=\mathbf{1} \beta_0  + X\beta + \textcolor{red}{Z u} + \epsilon$$
+* Remark 1: Example 1 includes treatment effects as fixed effects. Similar to LM and GLM, when available and sensible, other covariates should be added 
+
+## LME: fixed vs random effects
+* Remark 2: You might wonder why do we treat $u_i$'s as random, rather than fixed effects. 
+* Fixed-effects: typically, a fixed effect captures a parameter at the population level
+* Random-effects: 
+    + A random effect captures cluster-specific effects (e.g., due to cells clustered in animals)
+    + In many situations, the number of clusters (e.g., patients in a longitudinal study) is large.There would be too many parameters to estimate if we treat $u_i$'s as fixed. 
+    + Subject-specific effects are typically of no direct scientific interest
+* Remark 3: Other random effects might also be necessary. e.g., we will discuss random slopes in an example. 
+
+## Fit an LME model
+* The parameters need to be estimated: 
+$$\beta_0, \beta_1, \cdots, \beta_p, \sigma^2, \sigma_b^2$$ 
+* Two methods to estimated parameters
+    + Maximum likelihood estimation
+    + REML:  restricted/residual maximum likelihood estimates
+    + Two main packages: 
+      + nlme: lme
+      + lme4: lmer (doesn't provide p-value) and glmm
+
+## Fit an LME model: relevant packages
+```{r out.width="80%", echo=FALSE}
+knitr::include_graphics("Fig_Table5.jpg")
+```
+
+# LME Examples: Example 1
+## Example 1: use nlme::lme
+```{r, message=FALSE}
+################## Linear Mixed-effects Model ###########################
+#use nlme::lme
+library(nlme) #load the nlme library
+# The nlme:lme function specifies the fixed effects in the formula
+# (first argument) of the function, and the random effects
+# as an optional argument (random=). The vertical bar | denotes that
+# the cluster is done through the animal id (midx)
+obj.lme=lme(res~treatment_idx, data= Ex1, random = ~ 1|midx)
+#summary(obj.lme)
+```
+```{r, include=FALSE}
+summary(obj.lme)
+```
+
+
+## Example 1: evaluate the overall significance of a factor with nlme::lme
+```{r}
+#Wald F-test from an lme object
+obj.lme=lme(res~treatment_idx, data= Ex1, random = ~ 1|midx)
+anova(obj.lme) #Wald F-tes
+```
+
+## Example 1: evaluate the overall significance of a factor with nlme::lme
+```{r}
+#Likelihood ratio test from lme objects
+# notice the argument of the option “method”
+# which calls for using ML instead of REML
+obj.lme0.ml=lme(res~1, data= Ex1, random = ~ 1|midx, method="ML")
+obj.lme.ml=lme(res~treatment_idx, data= Ex1, random = ~ 1|midx, method="ML")
+anova(obj.lme0.ml, obj.lme.ml)
+```
+
+## Example 1: evaluate the overall significance of a factor with nlme::lme
+```{r}
+#equivalently, one can conduct LRT using drop1
+drop1(obj.lme.ml, test="Chisq")
+```
+
+## Example 1: Compare LM and LME
+* Compare LM and LME
+```{r out.width="80%", echo=FALSE}
+knitr::include_graphics("Fig_Table2.jpg")
+```
+
+## Example 1: use lme4::lmer
+```{r, warning=FALSE, message=FALSE}
+library(lme4) #load the lme4 library
+obj.lmer=lmer(res ~ treatment_idx+(1|midx), data=Ex1)
+```
+```{r, include=FALSE}
+summary(obj.lmer)
+```
+
+## Example 1: use lme4::lmer
+```{r}
+library(lmerTest)
+obj.lmer=lmerTest::lmer(res ~ treatment_idx+(1|midx), data=Ex1)
+#when ddf is not specified, the F test with Satterthwaite's method will be use
+anova(obj.lmer, ddf="Kenward-Roger")
+```
+
+## Example 1: use lme4::lmer
+```{r}
+summary(obj.lmer, ddf="Kenward-Roger")
+```
+
+## Example 1: use lme4::lmerr
+```{r}
+#likelihood ratio test
+obj.lmer.ml=lme4::lmer(res ~ treatment_idx+(1|midx), data=Ex1, REML=F)
+obj.lmer0.ml=lme4::lmer(res ~ 1+(1|midx), data=Ex1, REML=F)
+anova(obj.lmer0.ml, obj.lmer.ml)
+#drop1(obj.lmer.ml, test="Chisq") also works
+```
+
+
+# Adjustment for multiple comparisons
+## Adjustment for multiple comparisons
+* What is the issue of multiple comparisons
+* Suppose the null hypothesis is true. What is the type I error rate if $\sigma=0.05$ if we conduct a test? 
+* Suppose $M$ null hypotheses are true. What is the probability of making at least one mistake if we use $\sigma=0.05$ for each test? 
+    + This probability is called the family wise error rate
+* Mathematical derivation or simulation will show that the family wise error rate is much greater than 0.05
+* Procedures have been developed to control for the family wise error rate and other types error rate (false disovery rate)
+
+## Adjustment for multiple comparisons
+```{r, warning=FALSE, echo=FALSE}
+library(emmeans)
+obj.lmer=lme4::lmer(res ~ treatment_idx+(1|midx), data=Ex1)
+contrast(emmeans(obj.lmer, specs="treatment_idx"), "pairwise")
+```
+
+## Adjustment for multiple comparisons
+```{r}
+# the default method of degrees of freedom is Kenward-Roger’s method
+contrast(emmeans(obj.lmer, specs="treatment_idx"), "trt.vs.ctrl", ref = "1")
+```
+
+
+
