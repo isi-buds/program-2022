@@ -1,5 +1,5 @@
 ---
-title: "Lab 10b"
+title: "Lab 10b Solutions"
 author: "Catalina Medina and Vladimir Minin"
 output: html_document
 date: '2022-07-22'
