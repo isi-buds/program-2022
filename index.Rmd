@@ -129,7 +129,7 @@ library(fontawesome)
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
 | DBH 4011 | Mixed effect models | [`r fa(name = "desktop")`](week3-material/day13/day13-lecture.pdf) (Rmd: [`r fa(name = "file")`](week3-material/day13/day13-lecture.Rmd)) |
-| DBH 4011 | Resume writing workshop | |
+| DBH 4011 | Lab: Review prediction with regression <br/> How to make a website using RStudio and GitHub <br/> Organizing grad school applications (Trello) | |
 
 ## Day 14 - July 28
 
@@ -142,6 +142,7 @@ library(fontawesome)
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
 | DBH 4011 | | |
+| DBH 4011 (2-2:50pm) | Resume writing workshop | |
 
 ## Day 16 - August 1
 

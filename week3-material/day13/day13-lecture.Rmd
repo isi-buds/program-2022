@@ -86,7 +86,7 @@ table(Ex1$midx)
 ## Example 1: Ignore data dependence  (\textcolor{red}{incorrect} analysis)
 * A \textcolor{red}{common} analysis is to ignore data dependence 
 * Representative descriptions of inappropriate analyses
-    + ‘‘t(28656) = 314 with p<10-10 over a total of n=28657 neurons pooled across six mice,’’ 
+    + ‘‘t(28656) = 314 with $p<10^{-10}$ over a total of n=28657 neurons pooled across six mice,’’ 
     + ‘‘n = 377 neurons from four mice, two-sided Wilcoxon signed rank test,’’
     +  ‘‘610 A cells, 987 B cells and 2584 C cells from 10 mice, oneway ANOVA and Kruskal–Wallis test,’’ 
     + ‘‘two-sided paired t test, n=1597 neurons from 11 animals, d.f. = 1596,’’
@@ -191,11 +191,9 @@ knitr::include_graphics("Fig_Table1.jpg")
 \vspace{0.3cm}
 * A Type II error (false negative): failing to reject the null hypothesis when it is false 
 \vspace{0.3cm}
-* The distribution of p values under the null hypothesis
-\vspace{0.3cm}
 * Significance level $\alpha$: 
 \vspace{0.3cm}
-* If the null hypothesis is true and $\alpha=0.05$, what is the expected/theoretical type I error rate? 
+* If the null hypothesis is true and $\alpha=0.05$, the type I error rate of a valid test should be 0.05
 
 ## The consequence of ignoring data dependence: a simulation study
 ```{r, eval = FALSE, cache= TRUE}
@@ -211,8 +209,8 @@ knitr::include_graphics("Fig3.jpg")
 * The model \textcolor{red}{without} accounting for dependence:
 $$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + \cdots + x_{ij,4}\beta_4 + \epsilon_{ij}, i=1, \cdots, 24; j=1, \cdots, n_i;$$
 where     
-    + where $n_i$ is the number of observations from the $i$th mouse and $\sum_{i=1}^{24}n_i=1200$
-    + $\epsilon_{ij}$ represents the deviation in pCREB immunoreactivity of observation (cell) $j$ in mouse $i$ from the mean pCREB immunoreactivity of mouse i.
+    + $n_i$ is the number of observations from the $i$th mouse and $\sum_{i=1}^{24}n_i=1200$
+    + $\epsilon_{ij}$ represents the deviation in pCREB immunoreactivity of observation (cell) $j$ in mouse $i$ from the mean pCREB immunoreactivity of mouse $i$. We assume that the errors $\epsilon_{ij}$'s are i.i.d. from $N(0, \sigma^2)$.
 
 ## A Motivating Example of LME: Example 1  (\textcolor{red}{the wrong model}) 
 * The model \textcolor{red}{without} accounting for dependence:
@@ -227,26 +225,31 @@ where the coefficients $\beta_0, \beta_1, \beta_2, \beta_3, \beta_4$ are assumed
 ## A Motivating Example of LME: Example 1  (\textcolor{red}{the wrong model}) 
 * The model \textcolor{red}{without} accounting for dependence:
 $$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + \cdots + x_{ij,4}\beta_4 + \epsilon_{ij}, i=1, \cdots, 24; j=1, \cdots, n_i;$$
-* We use four dummy variables to denote treatmenest/conditions, which are the time after treatment
+* We use four dummy variables to denote treatments/conditions, which are the time after treatment
     + $x_{ij,1} = 1$ for 24 hours and 0 otherwise
     + $x_{ij,2} = 1$ for 48 hours and 0 otherwise
     + $x_{ij,3} = 1$ for 72 hours and 0 otherwise
     + $x_{ij,4} = 1$ for 1 week and 0 otherwise after ketamine treatments, respectively.
 
 ## A Motivating Example of LME: Example 1 
-* Cells from the same animal share the same enviroment
-    + We add the subject-specific effect $u_i$ into the LM
-    + $(u_1, \cdots, u_{24})$ are assumed to be independent and identically distributed (i.i.d.) from $N(0,\sigma_b^2)$
+* Cells from the same animal share the same environment
 $$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + … + x_{ij,4}\beta_4 + \textcolor{red}{u_i} + \epsilon_{ij}, i=1, …, 24; j=1, …, n_i;$$
-* This is model is a mixed-effects model because
-    + $(u_1, \cdots, u_{24})$ are random-effect coefficients
-    + $(\beta_0, \cdots, \beta_{24})$ are fixed-effect coefficients
+* We add the subject-specific effect $u_i$ into the LM
+    + $(u_1, \cdots, u_{24})$ are assumed to be independent and identically distributed (i.i.d.) from $N(0,\sigma_b^2)$
+    + In addition, $(u_1, \cdots, u_{24})$ are assumed to be independent from the random errors $\epsilon_{ij}$'s.  
+
 
 ## A Motivating Example of LME: Example 1 
-* Including the random efficients introduces correlation between two observations from the same cluster:
-    + for $j\not=j'$, $cov(Y_{ij}, Y_{ij'})=$
+$$Y_{ij} = \beta_0 + x_{ij,1}\beta_1 + … + x_{ij,4}\beta_4 + \textcolor{red}{u_i} + \epsilon_{ij}, i=1, …, 24; j=1, …, n_i;$$
+* We call this model a mixed-effects model because there are two types of coefficeints
+    + $(u_1, \cdots, u_{24})$ are random-effect coefficients
+    + $(\beta_0, \cdots, \beta_{4})$ are fixed-effect coefficients
+
+## A Motivating Example of LME: Example 1 
+* Including the random coefficients introduces correlation between two observations from the same cluster:
+    + for $j\not=j'$, $cov(Y_{ij}, Y_{ij'})= ... =\sigma_b^2$
     \vspace{2cm}
-    + for $i\not=i'$, $cov(Y_{ij}, Y_{i'j'})=$
+    + for $i\not=i'$, $cov(Y_{ij}, Y_{i'j'})=0$
     \vspace{2cm}
     
 ## A Better Representation of the model
@@ -361,16 +364,14 @@ obj.lmer0.ml=lme4::lmer(res ~ 1+(1|midx), data=Ex1, REML=F)
 anova(obj.lmer0.ml, obj.lmer.ml)
 #drop1(obj.lmer.ml, test="Chisq") also works
 ```
-
-
 # Adjustment for multiple comparisons
 ## Adjustment for multiple comparisons
 * What is the issue of multiple comparisons
-* Suppose the null hypothesis is true. What is the type I error rate if $\sigma=0.05$ if we conduct a test? 
-* Suppose $M$ null hypotheses are true. What is the probability of making at least one mistake if we use $\sigma=0.05$ for each test? 
+* Suppose the null hypothesis is true. What is the type I error rate if we conduct a test with $\alpha=0.05$? 
+* Suppose $M$ null hypotheses are true. What is the probability of making at least one mistake if we use $\alpha=0.05$ for each test? 
     + This probability is called the family wise error rate
 * Mathematical derivation or simulation will show that the family wise error rate is much greater than 0.05
-* Procedures have been developed to control for the family wise error rate and other types error rate (false disovery rate)
+* Procedures have been developed to control for the family wise error rate and other types error rate (e.g., false discovery rate)
 
 ## Adjustment for multiple comparisons
 ```{r, warning=FALSE, echo=FALSE}
@@ -384,6 +385,8 @@ contrast(emmeans(obj.lmer, specs="treatment_idx"), "pairwise")
 # the default method of degrees of freedom is Kenward-Roger’s method
 contrast(emmeans(obj.lmer, specs="treatment_idx"), "trt.vs.ctrl", ref = "1")
 ```
+
+
 
 
 
