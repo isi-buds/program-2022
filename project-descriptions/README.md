@@ -26,8 +26,7 @@ The characterization of dynamic and person-specific profiles of stress responses
 The importance of psychological stress in the context of health/disease risk is well established. Stress is a dynamic process and must be noticed and managed in real time. Despite impressive advances in the area of stress-related biobehavioral mechanisms, current measures remain constrained in their ability to reliably quantify stress dynamics in the real-world setting and capture key features that are prognostic of disease risk, such as onset, peak, recovery, and the magnitude and patterning of temporal fluctuations. This limitation in adequately capturing across- and within-individual stress heterogeneity has important implications for risk identification and providing optimally-timed (just-in-time; JIT) efficacious interventions. Thus, in order to advance precision medicine for managing stress, there is a compelling and as-yet-unmet scientific need for improved approaches for stress measurement. As a first step we wish to determine if we can reliably classify high vs. low self-reported stress episodes and in pregnant females utilizing a variety of psychological and physiological features measured densely over time along with contextual and demographic factors, and to determine if model performance varies by gestational age.  *This project will rely heavily on data manipulation skills, data visualization methods, correlated data methods, mixed effects modeling, and prediction model selection/assessment*.
 
 
-## Movement patterns of farmers and forest workers from the Thailand-Myanmar border 
-## (Project 3)
+## Project 3: Movement patterns of farmers and forest workers from the Thailand-Myanmar border 
 
 ### Mentors:
 
@@ -48,8 +47,7 @@ In this pilot study we recruited 50 rural villagers from along the Myanmar-Thail
 We would like to describe the activity spaces of individuals, and to investigate potential differences by age, gender, and season. We would also like to investigate the possibility that some landscape features (e.g. houses or different land types) act as attractors for individuals in the study.
 
 
-## Spatio-temporal analysis of melioidosis cases in Lao People’s Democratic Republic
-## (Project 4)
+## Project 3: Spatio-temporal analysis of melioidosis cases in Lao People’s Democratic Republic
 
 ### Mentors:
 
