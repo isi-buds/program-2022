@@ -56,7 +56,7 @@ We would like to describe the activity spaces of individuals, and to investigate
 
 ### Background
 
-Melioidosis is a severe infectious disease caused by the saprophytic Gram-negative bacterium Burkholderia pseudomallei. First identified in Myanmar (formerly Burma), it has most commonly been reported from Southeast Asia though it occurs throughout much of the tropical world (in Asia, Africa, and the Americas).. While not officially categorized as a neglected tropical disease, its contribution to global morbidity and mortality is striking: an estimated 165,000 new infections occur annually with 89,000 resulting in death.
+Melioidosis is a severe infectious disease caused by the saprophytic Gram-negative bacterium Burkholderia pseudomallei. First identified in Myanmar (formerly Burma), it has most commonly been reported from Southeast Asia though it occurs throughout much of the tropical world (in Asia, Africa, and the Americas). While not officially categorized as a neglected tropical disease, its contribution to global morbidity and mortality is striking: an estimated 165,000 new infections occur annually with 89,000 resulting in death.
 
 Diagnosis of the disease is complicated by its wide range of clinical manifestations and because of the need for laboratory confirmation of the causative agent. Bacteremia, visceral abscesses and pneumonia frequently result from infection and the natural antibiotic resistances of B. pseudomallei makes treatment difficult and costly. Case fatality rates can be close to 50%, even for patients who receive appropriate treatment.  
 
@@ -68,9 +68,9 @@ Data on confirmed cases and tests were collected by the Lao-Oxford-Mahosot Hospi
 
 Cases were mapped to patients’ home villages. Most patient villages were in or near Vientiane Capital, where Mahosot Hospital is located. Few individual villages had multiple infections, leaving little possibility of spatial or spatio-temporal clustering at the village level. We therefore focused our analysis on the district level (the smallest administrative unit above village level), choosing a subset of Laos based on the following criteria:
 
-A district must have cases from > 3 locations (villages), indicating good spatial coverage of surveillance.
-The district must have surveillance for > 90% of the study period, indicating good temporal coverage. 
-The district must be adjacent to other districts that meet criteria 1 and 2, allowing for spatial analysis of a contiguous area.
+- A district must have cases from > 3 locations (villages), indicating good spatial coverage of surveillance.
+- The district must have surveillance for > 90% of the study period, indicating good temporal coverage. 
+- The district must be adjacent to other districts that meet criteria 1 and 2, allowing for spatial analysis of a contiguous area.
 
 On this basis, the study area included cases (total of 1073) in Vientiane Capital and neighboring districts. Cases detected sporadically throughout the rest of the country were excluded from the analysis.
 
