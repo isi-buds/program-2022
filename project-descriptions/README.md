@@ -26,3 +26,55 @@ The characterization of dynamic and person-specific profiles of stress responses
 The importance of psychological stress in the context of health/disease risk is well established. Stress is a dynamic process and must be noticed and managed in real time. Despite impressive advances in the area of stress-related biobehavioral mechanisms, current measures remain constrained in their ability to reliably quantify stress dynamics in the real-world setting and capture key features that are prognostic of disease risk, such as onset, peak, recovery, and the magnitude and patterning of temporal fluctuations. This limitation in adequately capturing across- and within-individual stress heterogeneity has important implications for risk identification and providing optimally-timed (just-in-time; JIT) efficacious interventions. Thus, in order to advance precision medicine for managing stress, there is a compelling and as-yet-unmet scientific need for improved approaches for stress measurement. As a first step we wish to determine if we can reliably classify high vs. low self-reported stress episodes and in pregnant females utilizing a variety of psychological and physiological features measured densely over time along with contextual and demographic factors, and to determine if model performance varies by gestational age.  *This project will rely heavily on data manipulation skills, data visualization methods, correlated data methods, mixed effects modeling, and prediction model selection/assessment*.
 
 
+## Movement patterns of farmers and forest workers from the Thailand-Myanmar border (Project 3)
+
+### Mentors:
+
+- Daniel Parker, Assistant Professor of Population Health and Disease Prevention, UCI
+- Vladimir Minin, Professor of Statistics, UCI
+
+
+### Background 
+
+Human travel patterns play an important role in infectious disease epidemiology and ecology. Movement into geographic spaces with high transmission can lead to increased risk of acquiring infections. Pathogens can also be distributed across the landscape via human travel. Most fine scale studies of human travel patterns have been done in urban settings in wealthy nations. Research into human travel patterns in rural areas of low- and middle-income nations are useful for understanding the human components of epidemiological systems for malaria or other diseases of the rural poor. The goal of this research is to use GPS loggers to quantify differences in travel patterns among age/gender groups and across weather seasons.
+
+### Study design and data
+
+In this pilot study we recruited 50 rural villagers from along the Myanmar-Thailand border to carry GPS loggers for the duration of a year. The GPS loggers were programmed to take a time-stamped reading every 30 minutes. We calculated daily movement ranges and multi-day trips by age and gender. We incorporated remote sensing data to assess patterns of days and nights spent in forested or farm areas, also by age and gender.
+
+### Objective
+
+We would like to describe the activity spaces of individuals, and to investigate potential differences by age, gender, and season. We would also like to investigate the possibility that some landscape features (e.g. houses or different land types) act as attractors for individuals in the study.
+
+
+## Spatio-temporal analysis of melioidosis cases in Lao People’s Democratic Republic (Project 4)
+
+### Mentors:
+
+- Daniel Parker, Assistant Professor of Population Health and Disease Prevention, UCI
+- Vladimir Minin, Professor of Statistics, UCI
+
+### Background
+
+Melioidosis is a severe infectious disease caused by the saprophytic Gram-negative bacterium Burkholderia pseudomallei. First identified in Myanmar (formerly Burma), it has most commonly been reported from Southeast Asia though it occurs throughout much of the tropical world (in Asia, Africa, and the Americas).. While not officially categorized as a neglected tropical disease, its contribution to global morbidity and mortality is striking: an estimated 165,000 new infections occur annually with 89,000 resulting in death.
+
+Diagnosis of the disease is complicated by its wide range of clinical manifestations and because of the need for laboratory confirmation of the causative agent. Bacteremia, visceral abscesses and pneumonia frequently result from infection and the natural antibiotic resistances of B. pseudomallei makes treatment difficult and costly. Case fatality rates can be close to 50%, even for patients who receive appropriate treatment.  
+
+The disease is environmentally acquired; the causative bacterial agent is found in a variety of soils and in surface water. Contact with contaminated soil or surface water is a likely risk factor for acquiring the infection. Soil surveys have frequently shown heterogeneous distributions of B. pseudomallei across landscapes and some studies have shown or suggested clustering of disease cases, usually at aggregate geographic levels. 
+
+### Study design and data
+
+Data on confirmed cases and tests were collected by the Lao-Oxford-Mahosot Hospital-Wellcome Trust Research Unit (LOMWRU). A case was defined as any patient from whom B. pseudomallei was identified in the Mahosot Hospital Microbiology Laboratory from any clinical sample between 1999 and 2017. Patient data also included village, district, and province of residence. All patient records were georeferenced using these residential data. Population census data and geographic boundary data were obtained from Lao DECIDE (http://www.decide.la/en/gis). 
+
+Cases were mapped to patients’ home villages. Most patient villages were in or near Vientiane Capital, where Mahosot Hospital is located. Few individual villages had multiple infections, leaving little possibility of spatial or spatio-temporal clustering at the village level. We therefore focused our analysis on the district level (the smallest administrative unit above village level), choosing a subset of Laos based on the following criteria:
+
+A district must have cases from > 3 locations (villages), indicating good spatial coverage of surveillance.
+The district must have surveillance for > 90% of the study period, indicating good temporal coverage. 
+The district must be adjacent to other districts that meet criteria 1 and 2, allowing for spatial analysis of a contiguous area.
+
+On this basis, the study area included cases (total of 1073) in Vientiane Capital and neighboring districts. Cases detected sporadically throughout the rest of the country were excluded from the analysis.
+
+
+### Objective
+
+Given the locations of villages across the landscape where melioidosis can be diagnosed, we would like to find if there are village characteristics that differentiate villages with diagnosed melioidosis cases from those that do not have diagnosed cases?
