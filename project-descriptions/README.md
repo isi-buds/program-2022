@@ -47,7 +47,7 @@ In this pilot study we recruited 50 rural villagers from along the Myanmar-Thail
 We would like to describe the activity spaces of individuals, and to investigate potential differences by age, gender, and season. We would also like to investigate the possibility that some landscape features (e.g. houses or different land types) act as attractors for individuals in the study.
 
 
-## Project 3: Spatio-temporal analysis of melioidosis cases in Lao People’s Democratic Republic
+## Project 4: Spatio-temporal analysis of melioidosis cases in Lao People’s Democratic Republic
 
 ### Mentors:
 
@@ -78,3 +78,15 @@ On this basis, the study area included cases (total of 1073) in Vientiane Capita
 ### Objective
 
 Given the locations of villages across the landscape where melioidosis can be diagnosed, we would like to find if there are village characteristics that differentiate villages with diagnosed melioidosis cases from those that do not have diagnosed cases?
+
+## Project 5: Uncovering gene-gene interaction motifs from single cell transcriptomic data (Read lab)
+
+### Mentors:
+
+- Elizabeth Read, Assistant Professor of Chemical and Biomolecular Engineering, UCI
+- Babak Shahbaba, Professor of Statistics, UCI (maybe a little Vladimir when Babak is away)
+
+In recent years, single cell transcriptomics has enabled researchers to measure the expression of many thousands of genes simultaneously within individual cells. An ongoing challenge in the field is to infer gene-gene interactions from transcriptomic data, despite the noisiness of the data. In the Read lab, we use mechanistic models of gene expression to understand how different sources of noise (both biological and experimental) affect transcriptomic measurements. We then use these models to infer underlying mechanisms of gene-gene interactions. 
+
+In this project, we will be working with synthetic (i.e., simulated) transcriptomic data, produced from various classes of stochastic gene-gene interaction models. The models encode different types of interaction motifs for pairs of genes. The synthetic dataset consists of a large number of bivariate gene-gene coexpression distributions, each produced from a certain choice of interaction motif and associated biochemical parameters. We will test the hypothesis that gene pairs belonging to these different classes of interaction motifs are identifiable by their bivariate coexpression patterns. In other words, does the model predict that the different interaction motifs have characteristic bivariate expression patterns? Or are they indistinguishable from one another? A follow up question will be: how much does the presence of experimental noise (especially that introduced by low RNA capture rates) affect our ability to distinguish these patterns? Students will also have an opportunity to analyze real transcriptomic data with the newly mastered statistical techniques. Results from this project will help guide future methods of analysis of real-world transcriptomic data.
+
