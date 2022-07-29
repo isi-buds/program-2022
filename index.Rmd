@@ -15,6 +15,7 @@ output:
 library(fontawesome)
 ```
 
+*The program meets daily from 9 am - 3:25 pm, unless otherwise specified.*
 
 ## Before the program
 
@@ -148,13 +149,13 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | Research project proposal presentations | |
 
 ## Day 17 - August 2
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 3011 | | |
+| DBH 3011 | Research project proposal presentations | |
 
 ## Day 18 - August 3
 
