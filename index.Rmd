@@ -128,20 +128,20 @@ library(fontawesome)
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | Mixed effect models | [`r fa(name = "desktop")`](week3-material/day13/day13-lecture.pdf) (Rmd: [`r fa(name = "file")`](week3-material/day13/day13-lecture.Rmd)) |
+| DBH 4011 | Linear mixed effect models (LMM) | [`r fa(name = "desktop")`](week3-material/day13/day13-lecture.pdf) (Rmd: [`r fa(name = "file")`](week3-material/day13/day13-lecture.Rmd)) |
 | DBH 4011 | Lab: Review prediction with regression <br/> How to make a website using RStudio and GitHub <br/> Organizing grad school applications (Trello) | |
 
 ## Day 14 - July 28
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | LMM and GLMM | [`r fa(name = "desktop")`](week3-material/day14/day14-lecture.pdf) (Rmd: [`r fa(name = "file")`](week3-material/day14/day14-lecture.Rmd)) |
 
 ## Day 15 - July 29
 
 | Location      |  Topic                        | Materials    |
 |:--------------|:------------------------------|:-------------|
-| DBH 4011 | | |
+| DBH 4011 | Bayes LM and GLMs | [`r fa(name = "desktop")`](week3-material/day15/day15-lecture-Bayes-GLM.pdf) |
 | DBH 4011 (2-2:50pm) | Resume writing workshop | |
 
 ## Day 16 - August 1
