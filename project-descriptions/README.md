@@ -90,3 +90,28 @@ In recent years, single cell transcriptomics has enabled researchers to measure 
 
 In this project, we will be working with synthetic (i.e., simulated) transcriptomic data, produced from various classes of stochastic gene-gene interaction models. The models encode different types of interaction motifs for pairs of genes. The synthetic dataset consists of a large number of bivariate gene-gene coexpression distributions, each produced from a certain choice of interaction motif and associated biochemical parameters. We will test the hypothesis that gene pairs belonging to these different classes of interaction motifs are identifiable by their bivariate coexpression patterns. In other words, does the model predict that the different interaction motifs have characteristic bivariate expression patterns? Or are they indistinguishable from one another? A follow up question will be: how much does the presence of experimental noise (especially that introduced by low RNA capture rates) affect our ability to distinguish these patterns? Students will also have an opportunity to analyze real transcriptomic data with the newly mastered statistical techniques. Results from this project will help guide future methods of analysis of real-world transcriptomic data.
 
+
+## Project 6: An assessment of associations between congenital conditions and COVID-19 severity in children
+
+### Mentors:
+
+- Louis Ehwerhemuepha, Manager, Computational Research, CHOC Research Institute
+- Babak Shahbaba, Professor of Statistics, UCI (maybe a little Vladimir when Babak is away)
+
+### Study objective
+Assess and quantify the “risk” of severe COVID-19 among children with congenital conditions compared to their peers, and rank by magnitude of effect sizes.
+
+### Hypothesis (null)
+Children with congenital disorders experience the same levels of severity of COVID-19 on infection with SARS-CoV-2 as their peers born with no congenital disorders.
+
+Used interchangeably with congenital conditions: congenital anomalies, congenital defects, birth defects, congenital malformations, etc.
+
+### Background
+The World Health Organization estimates that 6% of children born worldwide have some type of congenital anomalies. These are structural or functional anomalies present at birth that can affect any body system including the respiratory, cardiovascular, and gastrointestinal systems. The CDC puts the rate of congenital anomalies at about 3% of births in the US. These children contribute to 20% of all infant deaths in the US indicating that it is highly morbid with high mortality rate. Most studies on relationship between COVID-19 and congenital anomalies have focused on congenital heart defects but there are many other types of congenital defects that may predispose patients to severe COVID-19 on infection with the SARS-CoV-2 virus.
+
+### Objective 
+In this study, we assess associations between COVID-19 severity and congenital anomalies. The goal is to estimate the extra burden COVID-19 may pose to children with congenital anomalies and identify the most vulnerable group of patients.
+
+Data Collection: Data for this study was retrieved from the Cerner Real-World Data® on COVID-19 urgent care, emergency, and inpatient encounters of children less than 18 years at time of encounter between March 2020 and March 2022. Patient demographics, non-congenital chronic conditions, and COVID-19 severity defined by level of oxygen therapy required were retrieved. Congenital and chromosomal anomalies were identified including anomalies affecting neurologic, circulatory, respiratory, genitourinary, musculoskeletal, and digestive systems as well as the anomalies of the eye, ear, face, and neck.
+
+Statistical considerations: Appropriate matching procedure between patients with congenital/chromosomal conditions and those without. Consider using demographics, obesity, number of other chronic conditions, month of encounter, and exact matching on “tenant” (health system) to reduce bias due to COVID-19 variant, period of pandemic, local COVID-19 surges, underlying conditions, and putative risk factors for severe 
